@@ -1,0 +1,67 @@
+# docker-compose.yml — Bolt KV Store 3-node cluster
+#
+# Start cluster:  docker-compose up
+# Stop cluster:   docker-compose down
+# View logs:      docker-compose logs -f
+# Run benchmark:  python benchmark.py --port 6379
+
+version: '3.8'
+
+services:
+  node-a:
+    build: .
+    container_name: bolt-node-a
+    command: ["--id", "A", "--port", "6379", "--host", "0.0.0.0"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - wal-a:/data/wal
+    environment:
+      - NODE_ID=A
+      - PORT=6379
+    networks:
+      - bolt-cluster
+    restart: unless-stopped
+
+  node-b:
+    build: .
+    container_name: bolt-node-b
+    command: ["--id", "B", "--port", "6380", "--host", "0.0.0.0"]
+    ports:
+      - "6380:6380"
+    volumes:
+      - wal-b:/data/wal
+    environment:
+      - NODE_ID=B
+      - PORT=6380
+    networks:
+      - bolt-cluster
+    restart: unless-stopped
+    depends_on:
+      - node-a
+
+  node-c:
+    build: .
+    container_name: bolt-node-c
+    command: ["--id", "C", "--port", "6381", "--host", "0.0.0.0"]
+    ports:
+      - "6381:6381"
+    volumes:
+      - wal-c:/data/wal
+    environment:
+      - NODE_ID=C
+      - PORT=6381
+    networks:
+      - bolt-cluster
+    restart: unless-stopped
+    depends_on:
+      - node-a
+
+volumes:
+  wal-a:
+  wal-b:
+  wal-c:
+
+networks:
+  bolt-cluster:
+    driver: bridge

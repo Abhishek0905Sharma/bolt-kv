@@ -1,0 +1,9 @@
+__pycache__/ 
+wal_data/ 
+wal_node_A/ 
+wal_node_B/ 
+wal_node_C/ 
+wal_raft_A/ 
+wal_raft_B/ 
+wal_raft_C/ 
+*.pyc 
