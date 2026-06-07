@@ -8,13 +8,13 @@ FROM python:3.12-slim
 WORKDIR /app
 
 # Copy all source files
-COPY engine.py wal.py server.py raft.py raft_node.py ring.py lru_cache.py ./
+COPY engine.py wal.py server.py raft.py raft_node.py ring.py lru_cache.py http_server.py ./
 
 # Create WAL directory
 RUN mkdir -p /data/wal
 
 # Expose client port
-EXPOSE 6379
+EXPOSE 8080
 
 # Health check — ping the server every 30s
 HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
